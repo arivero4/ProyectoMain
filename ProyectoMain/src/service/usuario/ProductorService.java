@@ -36,15 +36,23 @@ public class ProductorService extends ServiceBase<Productor, ProductorDAO> {
 		}
 	}
 
-	public Productor obtenerPorCedula(String cedula) throws ServiceException {
+	public Productor obtenerPorNumeroIdentificacion(String numeroIdentificacion) throws ServiceException {
 		try {
-			validateNotEmpty(cedula, "cedula");
-			validateNumeric(cedula, "cedula");
-			return dao.obtenerPorCedula(cedula);
+			validateNotEmpty(numeroIdentificacion, "numeroIdentificacion");
+			validateNumeric(numeroIdentificacion, "numeroIdentificacion");
+			
+			// Buscar todos los productores y filtrar por número de identificación
+			List<Productor> productores = dao.obtenerTodos();
+			for (Productor p : productores) {
+				if (p.getNumeroIdentificacion() != null && p.getNumeroIdentificacion().equals(numeroIdentificacion)) {
+					return p;
+				}
+			}
+			return null;
 		} catch (ValidationException e) {
 			throw e;
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Error al buscar productor por cedula", e);
+			LOGGER.log(Level.SEVERE, "Error al buscar productor por número de identificación", e);
 			throw new ServiceException("SEARCH_ERROR", "Error buscando productor", e);
 		}
 	}
@@ -61,7 +69,9 @@ public class ProductorService extends ServiceBase<Productor, ProductorDAO> {
 	public Productor crear(Productor productor) throws ServiceException {
 		try {
 			validarProductor(productor);
-			return dao.crear(productor);
+			long id = dao.crear(productor);
+			productor.setId(String.valueOf(id));
+			return productor;
 		} catch (ValidationException e) {
 			throw e;
 		} catch (SQLException e) {
@@ -73,7 +83,8 @@ public class ProductorService extends ServiceBase<Productor, ProductorDAO> {
 	public Productor actualizar(Productor productor) throws ServiceException {
 		try {
 			validarProductor(productor);
-			return dao.actualizar(productor);
+			dao.actualizar(productor);
+			return productor;
 		} catch (ValidationException e) {
 			throw e;
 		} catch (SQLException e) {
@@ -85,8 +96,7 @@ public class ProductorService extends ServiceBase<Productor, ProductorDAO> {
 	private void validarProductor(Productor productor) throws ValidationException {
 		validateNotNull(productor, "productor");
 		validateNotEmpty(productor.getNumeroIdentificacion(), "numeroIdentificacion");
-		validateNotEmpty(productor.getNombre(), "nombres");
-		validateNotEmpty(productor.getApellidos(), "apellidos");
+		validateNotEmpty(productor.getNombre(), "nombre");
 		
 		if (productor.getCorreoElectronico() != null && !productor.getCorreoElectronico().trim().isEmpty()) {
 			validateEmail(productor.getCorreoElectronico());

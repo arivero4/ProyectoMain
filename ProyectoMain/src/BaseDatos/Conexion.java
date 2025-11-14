@@ -26,11 +26,11 @@ public final class Conexion implements DBConnection {
     private static final Logger LOGGER = Logger.getLogger(Conexion.class.getName());
     
     // Parámetros de conexión Oracle
-    private final String username = "ejemploIca";
-    private final String password = "ejemploIca";
-    private final String host = "192.168.254.215";
+    private final String username = "EJEMPLOICA";
+    private final String password = "EJEMPLOICA";
+    private final String host = "192.168.2.100";
     private final String port = "1521";
-    private final String service = "ORCL";
+    private final String service = "XE";
 
     /**
      * Constructor privado para el patrón Singleton.
@@ -84,7 +84,7 @@ public final class Conexion implements DBConnection {
      */
     @Override
     public String getConnectionString() {
-        return String.format("jdbc:oracle:thin:@%s:%s:%s", this.host, this.port, this.service);
+        return String.format("jdbc:oracle:thin:@%s:%s/%s", this.host, this.port, this.service);
     }
 
     /**

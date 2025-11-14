@@ -30,6 +30,7 @@ public class InspeccionFitosanitariaForm extends BaseDialog {
 	private InspeccionFitosanitaria inspeccion;
 
 	// Servicios
+	@SuppressWarnings("unused")
 	private InspeccionFitosanitariaService inspeccionService;
 
 	// Componentes del formulario

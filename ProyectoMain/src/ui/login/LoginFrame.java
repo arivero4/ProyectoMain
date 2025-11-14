@@ -16,7 +16,7 @@ import model.Usuario;
 import DAO.UsuarioDAO;
 import service.usuario.UsuarioService;
 import service.exceptions.ServiceException;
-import conexion.Conexion;
+import BaseDatos.Conexion;
 
 /**
  * @version 1.0

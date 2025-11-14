@@ -133,23 +133,26 @@ public class UsuarioDAO extends DAOBase<Usuario> {
 	
 	/**
 	 * Mapea una fila del ResultSet a un objeto Usuario.
-	 * Nota: Como Usuario es abstracta, este método retorna los datos básicos.
-	 * Las subclases especializadas deben usar sus propios mappers.
+	 * Nota: Como Usuario es abstracta, creamos una implementación concreta anónima.
 	 * 
 	 * @param rs ResultSet con la fila a mapear
-	 * @return null - Usuario es abstracta y no puede ser instanciada
+	 * @return Usuario mapeado (implementación concreta)
 	 * @throws SQLException Si hay error al acceder a los campos
 	 */
 	private Usuario mapUsuario(ResultSet rs) throws SQLException {
-		// Usuario es abstracta, no puede ser instanciada directamente
-		// Las subclases (Productor, AsistenteTecnico, etc.) tienen sus propios DAOs
-		// Se verifica el ResultSet pero no se retorna instancia
-		if (rs != null) {
-			// Los datos se leen pero no se mapean (Usuario es abstracta)
-			String id = rs.getString("ID_USUARIO");
-			// Cada subclase tiene su propio DAO con su propio mapper
-		}
-		return null;
+		// Usuario es abstracta, creamos una implementación concreta anónima
+		Usuario usuario = new Usuario() {
+			// Clase anónima concreta de Usuario
+		};
+		
+		usuario.setId(rs.getString("ID_USUARIO"));
+		usuario.setNumeroIdentificacion(rs.getString("NUMERO_IDENTIFICACION"));
+		usuario.setRol(rs.getString("ROL"));
+		usuario.setNombre(rs.getString("NOMBRE"));
+		usuario.setTelefonoContacto(rs.getString("TELEFONO_CONTACTO"));
+		usuario.setCorreoElectronico(rs.getString("CORREO_ELECTRONICO"));
+		
+		return usuario;
 	}
 }
 

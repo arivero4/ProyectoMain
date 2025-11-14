@@ -22,6 +22,8 @@ public class InspeccionFitosanitariaFormSimple extends BaseDialog {
 
 	private boolean isEditMode = false;
 	private InspeccionFitosanitaria inspeccion;
+	
+	@SuppressWarnings("unused")
 	private InspeccionFitosanitariaService inspeccionService;
 
 	// Componentes

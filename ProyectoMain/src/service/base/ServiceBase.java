@@ -1,4 +1,4 @@
-﻿package service.base;
+package service.base;
 
 import java.util.logging.Logger;
 import DAO.DAOBase;

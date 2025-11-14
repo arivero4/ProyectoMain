@@ -6,7 +6,6 @@ import java.awt.*;
 import javax.swing.*;
 import model.Usuario;
 import service.negocio.InspeccionFitosanitariaService;
-import ui.components.BaseFrame;
 import ui.forms.InspeccionFitosanitariaListPanelSimple;
 import ui.utils.MessageUtil;
 import ui.utils.UIConstants;
@@ -21,7 +20,7 @@ import ui.utils.UIConstants;
  * Ventana principal del sistema.
  * Contiene el menú principal, toolbar y área de trabajo según el rol del usuario.
  */
-public class MainFrame extends BaseFrame {
+public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,9 +53,23 @@ public class MainFrame extends BaseFrame {
 	 * @param user Usuario autenticado
 	 */
 	public MainFrame(Usuario user) {
-		super(UIConstants.APP_TITLE + " - Principal", UIConstants.SIZE_MAIN);
+		// Llamar al constructor básico de JFrame
+		super();
+		
+		// PRIMERO asignar el usuario
 		this.currentUser = user;
+		
+		// AHORA configurar el frame manualmente
+		setTitle(UIConstants.APP_TITLE + " - Principal");
+		this.setSize(UIConstants.SIZE_MAIN);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setResizable(true);
+		
+		// Inicializar componentes DESPUÉS de tener currentUser
+		initializeComponents();
+		setupLayout();
+		setupListeners();
 		
 		// Inicializar servicios
 		try {
@@ -67,7 +80,6 @@ public class MainFrame extends BaseFrame {
 		}
 	}
 
-	@Override
 	protected void initializeComponents() {
 		// Menu Bar
 		menuBar = new JMenuBar();
@@ -100,12 +112,15 @@ public class MainFrame extends BaseFrame {
 		statusLabel = new JLabel("  Listo");
 		statusLabel.setFont(UIConstants.FONT_CAPTION);
 
-		userLabel = new JLabel("Usuario: " + currentUser.getNombre() + " (" + currentUser.getRol() + ")  ");
+		// Verificar que currentUser no sea null antes de usarlo
+		String userName = (currentUser != null) ? currentUser.getNombre() : "Usuario";
+		String userRole = (currentUser != null) ? currentUser.getRol() : "";
+		
+		userLabel = new JLabel("Usuario: " + userName + " (" + userRole + ")  ");
 		userLabel.setFont(UIConstants.FONT_CAPTION);
 		userLabel.setForeground(UIConstants.COLOR_TEXT_SECONDARY);
 	}
 
-	@Override
 	protected void setupLayout() {
 		// Configurar menús
 		setupMenuInspecciones();
@@ -158,12 +173,14 @@ public class MainFrame extends BaseFrame {
 		panel.add(welcomeLabel, gbc);
 
 		gbc.gridy = 1;
-		JLabel userNameLabel = new JLabel(currentUser.getNombre());
+		String userName = (currentUser != null) ? currentUser.getNombre() : "Usuario";
+		JLabel userNameLabel = new JLabel(userName);
 		userNameLabel.setFont(UIConstants.FONT_SUBTITLE);
 		panel.add(userNameLabel, gbc);
 
 		gbc.gridy = 2;
-		JLabel roleLabel = new JLabel("Rol: " + currentUser.getRol());
+		String userRole = (currentUser != null) ? currentUser.getRol() : "Sin rol";
+		JLabel roleLabel = new JLabel("Rol: " + userRole);
 		roleLabel.setFont(UIConstants.FONT_BODY);
 		roleLabel.setForeground(UIConstants.COLOR_TEXT_SECONDARY);
 		panel.add(roleLabel, gbc);
@@ -391,6 +408,21 @@ public class MainFrame extends BaseFrame {
 		if (confirm) {
 			System.exit(0);
 		}
+	}
+
+	/**
+	 * Configura los listeners de la ventana.
+	 */
+	protected void setupListeners() {
+		// Implementación por defecto vacía
+		// Las subclases pueden sobrescribir si necesitan listeners
+	}
+
+	/**
+	 * Muestra la ventana.
+	 */
+	public void display() {
+		setVisible(true);
 	}
 
 	/**
