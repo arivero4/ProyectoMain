@@ -1,0 +1,358 @@
+-- =====================================================================
+-- CAPA DAO (Data Access Objects) - IMPLEMENTACIÓN COMPLETADA
+-- PROYECTO: Sistema de Inspecciones Fitosanitarias v2.1
+-- FECHA: 13 de noviembre de 2025
+-- =====================================================================
+
+✅ CAPA DAO COMPLETAMENTE IMPLEMENTADA
+=======================================
+
+ESTRUCTURA CREADA:
+==================
+
+📦 Paquete: DAO
+├── DAOBase.java (Clase base abstracta genérica)
+│
+├── USUARIOS:
+│   ├── UsuarioDAO.java
+│   ├── ProductorDAO.java
+│   ├── AsistenteTecnicoDAO.java
+│   └── PropietarioDAO.java
+│
+├── ENTIDADES GEOGRÁFICAS:
+│   ├── DepartamentoDAO.java
+│   ├── MunicipioDAO.java
+│   ├── VeredaDAO.java
+│   └── PredioDAO.java
+│
+├── ENTIDADES AGRÍCOLAS:
+│   ├── LugarProduccionDAO.java
+│   ├── LoteDAO.java
+│   ├── CultivoDAO.java
+│   └── PlagaDAO.java
+│
+└── INSPECCIONES:
+    ├── InspeccionFitosanitariaDAO.java
+    └── ResultadoTecnicoDAO.java
+
+---
+
+DESCRIPCIÓN DETALLADA:
+======================
+
+1. DAOBase.java (CLASE GENERICA BASE)
+   ├─ Tipo: Clase Abstracta Genérica <T>
+   ├─ Propósito: Proporciona métodos reutilizables para CRUD
+   ├─ Patrones: Template Method
+   │
+   ├─ MÉTODOS GENÉRICOS:
+   │  ├─ findOne() - Busca un registro
+   │  ├─ findMany() - Busca múltiples registros
+   │  ├─ findOneWithParams() - Busca con parámetros
+   │  ├─ findManyWithParams() - Busca múltiples con parámetros
+   │  ├─ executeUpdate() - Ejecuta INSERT/UPDATE/DELETE
+   │  ├─ executeInsertWithGeneratedKey() - INSERT retornando ID
+   │  ├─ setParameters() - Asigna parámetros a queries
+   │  └─ closeResources() - Cierra conexiones/statements
+   │
+   ├─ INTERFAZ FUNCIONAL:
+   │  └─ ResultSetMapper<T> - Mapea ResultSet a objeto
+   │
+   └─ TIPOS DE PARÁMETROS SOPORTADOS:
+      ├─ String
+      ├─ Integer, Long
+      ├─ Double
+      ├─ java.sql.Date, java.sql.Timestamp
+      ├─ Boolean
+      └─ Object genérico
+
+---
+
+2. DAOS DE USUARIOS:
+
+   a) UsuarioDAO
+      ├─ Entidad: Usuario (abstracta)
+      ├─ Métodos:
+      │  ├─ obtenerPorId(long id)
+      │  ├─ obtenerPorEmail(String email)
+      │  ├─ obtenerPorCedula(String cedula)
+      │  ├─ obtenerTodos()
+      │  ├─ obtenerPorRol(String rol)
+      │  └─ eliminarLogico(long id)
+      └─ Notas: Clase base, Usuario es abstracta
+
+   b) ProductorDAO
+      ├─ Entidad: Productor
+      ├─ Tabla: PRODUCTOR
+      ├─ Métodos CRUD:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos()
+      │  ├─ actualizar()
+      │  └─ eliminar()
+      └─ Relaciones: ID_USUARIO, ID_LUGAR_PRODUCCION
+
+   c) AsistenteTecnicoDAO
+      ├─ Entidad: AsistenteTecnico
+      ├─ Tabla: ASISTENTE_TECNICO
+      ├─ Métodos CRUD:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos()
+      │  ├─ actualizar()
+      │  └─ eliminarLogico()
+      └─ Campos: ESPECIALIDAD, ACTIVO
+
+   d) PropietarioDAO
+      ├─ Entidad: Propietario
+      ├─ Tabla: PROPIETARIO
+      ├─ Métodos CRUD:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos()
+      │  ├─ actualizar()
+      │  └─ eliminarLogico()
+      └─ Relaciones: ID_USUARIO, ID_PREDIO
+
+---
+
+3. DAOS DE ENTIDADES GEOGRÁFICAS:
+
+   a) DepartamentoDAO
+      ├─ Tabla: DEPARTAMENTO
+      ├─ Campos: ID_DEPARTAMENTO, NOMBRE, CODIGO
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+   b) MunicipioDAO
+      ├─ Tabla: MUNICIPIO
+      ├─ Campos: ID_MUNICIPIO, ID_DEPARTAMENTO, NOMBRE, CODIGO
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+   c) VeredaDAO
+      ├─ Tabla: VEREDA
+      ├─ Campos: ID_VEREDA, ID_MUNICIPIO, NOMBRE, CODIGO
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+   d) PredioDAO
+      ├─ Tabla: PREDIO
+      ├─ Campos: ID_PREDIO, ID_PROPIETARIO, ID_VEREDA, NOMBRE, AREA_HECTAREAS, MATRICULA
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+---
+
+4. DAOS DE ENTIDADES AGRÍCOLAS:
+
+   a) LugarProduccionDAO
+      ├─ Tabla: LUGAR_PRODUCCION
+      ├─ Campos: ID_LUGAR_PRODUCCION, ID_PREDIO, NOMBRE, TIPO_CULTIVO
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+   b) LoteDAO
+      ├─ Tabla: LOTE
+      ├─ Campos: ID_LOTE, ID_LUGAR_PRODUCCION, NUMERO_LOTE, AREA_HECTAREAS
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+   c) CultivoDAO
+      ├─ Tabla: CULTIVO
+      ├─ Campos: ID_CULTIVO, ID_LOTE, TIPO_CULTIVO, FECHA_SIEMBRA, ESTADO
+      ├─ Métodos:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos() - solo ACTIVOS
+      │  ├─ actualizar()
+      │  ├─ cambiarEstado(long id, String estado)
+      │  └─ eliminar()
+      └─ Estados: ACTIVO, INACTIVO
+
+   d) PlagaDAO
+      ├─ Tabla: PLAGA
+      ├─ Campos: ID_PLAGA, NOMBRE_COMUN, NOMBRE_CIENTIFICO, DESCRIPCION, NIVEL_PELIGROSIDAD
+      └─ Métodos: crear(), obtenerPorId(), obtenerTodos(), actualizar(), eliminar()
+
+---
+
+5. DAOS DE INSPECCIONES:
+
+   a) InspeccionFitosanitariaDAO
+      ├─ Tabla: INSPECCION_FITOSANITARIA
+      ├─ Campos: ID_INSPECCION, ID_CULTIVO, ID_ASISTENTE_TECNICO, FECHA_INSPECCION, ESTADO
+      ├─ Métodos:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos()
+      │  ├─ obtenerPorEstado(String estado)
+      │  ├─ actualizar()
+      │  ├─ cambiarEstado(long id, String estado)
+      │  └─ eliminar()
+      └─ Estados: PENDIENTE, COMPLETADA
+
+   b) ResultadoTecnicoDAO
+      ├─ Tabla: RESULTADO_TECNICO
+      ├─ Campos: ID_RESULTADO, ID_INSPECCION, ID_PLAGA, NIVEL_INFESTACION, RECOMENDACIONES
+      ├─ Métodos:
+      │  ├─ crear()
+      │  ├─ obtenerPorId()
+      │  ├─ obtenerTodos()
+      │  ├─ actualizar()
+      │  └─ eliminar()
+      └─ Niveles: BAJO, MEDIO, ALTO
+
+---
+
+PATRONES IMPLEMENTADOS:
+=======================
+
+✅ DAO PATTERN
+   └─ Abstrae acceso a datos de la lógica de negocio
+
+✅ TEMPLATE METHOD PATTERN
+   └─ DAOBase define estructura, subclases especializan
+
+✅ GENERIC PROGRAMMING
+   └─ DAOBase<T> reutiliza código para múltiples entidades
+
+✅ FUNCTIONAL INTERFACES
+   └─ ResultSetMapper<T> para mapeo flexible
+
+---
+
+CARACTERÍSTICAS DE IMPLEMENTACIÓN:
+===================================
+
+✅ GESTIÓN DE RECURSOS:
+   ├─ closeResources() cierra ResultSet, Statement, Connection
+   ├─ Manejo de excepciones SQL
+   └─ Liberación automática en bloques finally
+
+✅ VALIDACIÓN:
+   ├─ Verificación de conexión disponible
+   ├─ Manejo de parámetros null
+   └─ Tipos de parámetros flexibles
+
+✅ OPERACIONES SOPORTADAS:
+   ├─ SELECT (findOne, findMany)
+   ├─ INSERT (crear con retorno de ID)
+   ├─ UPDATE (actualizar)
+   ├─ DELETE (eliminar)
+   └─ Queries con parámetros preparados
+
+✅ DOCUMENTACIÓN:
+   ├─ Todos los archivos con v2.1
+   ├─ 4 autores especificados
+   ├─ JavaDoc completo en cada método
+   └─ Descripciones de parámetros y excepciones
+
+---
+
+EJEMPLO DE USO:
+===============
+
+// 1. Crear un DAO
+CultivoDAO cultivoDAO = new CultivoDAO();
+
+// 2. Crear un cultivo
+Cultivo cultivo = new Cultivo();
+cultivo.setId("CULT001");
+long idGenerado = cultivoDAO.crear(cultivo);
+
+// 3. Obtener por ID
+Cultivo obtenido = cultivoDAO.obtenerPorId(idGenerado);
+
+// 4. Obtener todos
+List<Cultivo> todos = cultivoDAO.obtenerTodos();
+
+// 5. Actualizar
+cultivo.setId("CULT001_UPDATED");
+int filasActualizadas = cultivoDAO.actualizar(cultivo);
+
+// 6. Cambiar estado
+int estadoActualizado = cultivoDAO.cambiarEstado(idGenerado, "INACTIVO");
+
+// 7. Eliminar
+int filasEliminadas = cultivoDAO.eliminar(idGenerado);
+
+---
+
+FLUJO DE DATOS:
+===============
+
+Aplicación
+    ↓
+Servicio (Lógica de Negocio)
+    ↓
+DAO (Acceso a Datos)
+    ↓
+DAOBase (Operaciones Genéricas)
+    ↓
+DBConnection (Conexión Oracle)
+    ↓
+JDBC Oracle
+    ↓
+Base de Datos Oracle
+
+---
+
+MANEJO DE EXCEPCIONES:
+======================
+
+Todas las operaciones lanzan SQLException:
+├─ ClassNotFoundException - Driver JDBC no encontrado
+├─ SQLException - Errores de conexión o SQL
+├─ Errores cerrados en finally blocks
+└─ Se propagan a la capa de servicios
+
+---
+
+PRÓXIMOS PASOS:
+===============
+
+1. ⏳ Crear SERVICIOS que usen los DAOs
+   └─ CultivoService, InspeccionService, etc.
+
+2. ⏳ Implementar TRANSACCIONES
+   └─ Operaciones multi-tabla atómicas
+
+3. ⏳ Agregar VALIDACIONES DE NEGOCIO
+   └─ Reglas de inspección fitosanitaria
+
+4. ⏳ Crear INTERFAZ GRÁFICA (GUI)
+   └─ Swing o JavaFX con acceso a datos
+
+5. ⏳ Implementar LOGGING
+   └─ Log4j para auditoría
+
+6. ⏳ Agregar PRUEBAS UNITARIAS
+   └─ JUnit con mocks de DAOs
+
+---
+
+ESTADÍSTICAS:
+==============
+
+Total de DAOs creados: 15
+├─ DAOBase (genérica)
+├─ UsuarioDAO (base abstracta)
+├─ 3 DAOs de usuarios específicos
+├─ 4 DAOs geográficos
+├─ 4 DAOs agrícolas
+└─ 2 DAOs de inspecciones
+
+Métodos genéricos en DAOBase: 10+
+Tipos de parámetros soportados: 8
+Documentación: Completa v2.1 con 4 autores
+
+---
+
+ESTADO FINAL:
+==============
+
+✅ Capa de Modelo: COMPLETA (14 clases)
+✅ Capa de Base de Datos: COMPLETA (7 clases)
+✅ Scripts SQL: COMPLETOS (15 tablas)
+✅ Capa DAO: COMPLETA (15 DAOs)
+
+PRÓXIMA FASE: Servicios y Lógica de Negocio
+
+=====================================================================
+✅ IMPLEMENTACIÓN DE CAPA DAO COMPLETADA CON ÉXITO
+=====================================================================

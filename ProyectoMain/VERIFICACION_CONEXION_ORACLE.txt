@@ -1,0 +1,190 @@
+-- =====================================================================
+-- VERIFICACIÓN Y CONFIGURACIÓN DE CONEXIÓN ORACLE
+-- PROYECTO: Sistema de Inspecciones Fitosanitarias v2.1
+-- FECHA: 13 de noviembre de 2025
+-- =====================================================================
+
+CHECKLIST DE VERIFICACIÓN DE CONEXIÓN ORACLE:
+=============================================
+
+✓ 1. CLASE CONEXION.JAVA ACTUALIZADA
+   - Paquete: ejemploIca.db
+   - Ubicación: c:\Users\SALA-404\eclipse-workspace\ProyectoMain\src\BaseDatos\Conexion.java
+   - Versión: 2.1
+   - Autores: Isabella Vargas, Ricardo Viancha, Iswar Corrales, Andres Rivero
+
+✓ 2. PARÁMETROS DE CONEXIÓN CONFIGURADOS
+   - Usuario: proy_fito
+   - Contraseña: col2025
+   - SID: ORCL
+   - IP: 192.168.254.215
+   - Puerto: 1521
+   - Cadena: jdbc:oracle:thin:@192.168.254.215:1521:ORCL
+
+✓ 3. MEJORAS IMPLEMENTADAS EN LA CLASE
+
+   a) IMPORTACIONES NECESARIAS:
+      - java.sql.Connection
+      - java.sql.DriverManager
+      - java.sql.SQLException (NUEVA)
+      - javax.swing.JOptionPane
+
+   b) VARIABLES PRIVADAS CON MODIFICADOR FINAL:
+      - usuario (final)
+      - contrasenia (final)
+      - bd (final)
+      - ip (final)
+      - puerto (final)
+      - cadena (final)
+
+   c) MÉTODOS IMPLEMENTADOS:
+      
+      1. estableceConexion()
+         - Carga el driver JDBC de Oracle
+         - Establece la conexión
+         - Valida que la conexión sea correcta
+         - Manejo de excepciones específicas:
+           * ClassNotFoundException - Si ojdbc.jar no está en el classpath
+           * SQLException - Si hay error en credenciales o conexión
+           * Exception - Excepciones generales
+
+      2. validarConexion() [NUEVO]
+         - Verifica si la conexión está abierta y activa
+         - Retorna boolean (true/false)
+
+      3. cerrarConexion() [NUEVO]
+         - Cierra la conexión de manera segura
+         - Muestra confirmación visual
+         - Maneja excepciones al cerrar
+
+      4. getConexion() [NUEVO]
+         - Retorna la conexión actual
+         - Permite acceso desde otras clases
+
+✓ 4. MANEJO DE EXCEPCIONES
+
+   ClassNotFoundException:
+   └─ Mensaje: Driver de Oracle no encontrado
+   └─ Solución: Agregar ojdbc.jar al classpath del proyecto
+
+   SQLException:
+   └─ Mensaje: Error de conexión SQL
+   └─ Causas comunes:
+      - Usuario o contraseña incorrectos
+      - IP o puerto incorrectos
+      - SID no existe
+      - Servidor Oracle no está ejecutándose
+
+   Exception:
+   └─ Mensaje: Error general
+   └─ Captura cualquier otra excepción inesperada
+
+✓ 5. REQUISITOS PREVIOS PARA LA CONEXIÓN
+
+   a) DRIVER JDBC INSTALADO:
+      - Archivo: ojdbc.jar (versión según Oracle 11g/12c/19c)
+      - Ubicación: Agregar al classpath del proyecto
+      - En Eclipse: Project > Properties > Java Build Path > Libraries
+
+   b) SERVIDOR ORACLE EJECUTÁNDOSE:
+      - Servicio Oracle debe estar iniciado
+      - Base de datos ORCL debe existir
+      - Listener debe estar activo en puerto 1521
+
+   c) USUARIO Y CREDENCIALES VÁLIDOS:
+      - Usuario: proy_fito
+      - Contraseña: col2025
+      - Permisos: SELECT, INSERT, UPDATE, DELETE en todas las tablas
+
+   d) ACCESO DE RED:
+      - Conexión a 192.168.254.215 debe ser posible
+      - Puerto 1521 debe estar abierto/accesible
+
+✓ 6. PRUEBA DE CONEXIÓN
+
+   Para probar la conexión, use el siguiente código:
+
+   ```java
+   Conexion conexion = new Conexion();
+   Connection conn = conexion.estableceConexion();
+   
+   if (conexion.validarConexion()) {
+       System.out.println("Conexión establecida exitosamente");
+       conexion.cerrarConexion();
+   } else {
+       System.out.println("Error en la conexión");
+   }
+   ```
+
+✓ 7. SCRIPT SQL EJECUTADO
+
+   Ubicación: c:\Users\SALA-404\eclipse-workspace\ProyectoMain\SCRIPT_ORACLE_BD.sql
+   
+   Tablas Creadas:
+   1. DEPARTAMENTO - Nivel territorial 1
+   2. MUNICIPIO - Nivel territorial 2
+   3. VEREDA - Nivel territorial 3
+   4. PROPIETARIO - Usuario propietario
+   5. PRODUCTOR - Usuario productor
+   6. ASISTENTE_TECNICO - Usuario técnico
+   7. CULTIVO - Información de cultivos
+   8. PLAGA - Información de plagas
+   9. LUGAR_PRODUCCION - Sitio de producción
+   10. INSPECCION_FITOSANITARIA - Inspecciones realizadas
+   11. PREDIO - Unidades de producción
+   12. LOTE - Subdivisiones de predios
+   13. PLAGA_CULTIVO - Relación M:M
+   14. CULTIVO_LOTE - Relación M:M
+   15. RESULTADO_TECNICO - Resultados de inspecciones
+
+✓ 8. POSIBLES PROBLEMAS Y SOLUCIONES
+
+   PROBLEMA 1: ClassNotFoundException: oracle.jdbc.driver.OracleDriver
+   └─ SOLUCIÓN: 
+      a) Descargar ojdbc.jar desde Oracle
+      b) Copiar en carpeta lib del proyecto
+      c) En Eclipse: Click derecho en ojdbc.jar > Build Path > Add to Build Path
+
+   PROBLEMA 2: SQLException - IO Error: Connection refused
+   └─ SOLUCIÓN:
+      a) Verificar que Oracle esté ejecutándose
+      b) Verificar la IP y puerto correctos
+      c) Verificar firewall permitiendo puerto 1521
+      d) En Windows: Services > buscar Oracle > Start
+
+   PROBLEMA 3: ORA-01017 - Invalid username/password
+   └─ SOLUCIÓN:
+      a) Verificar usuario: proy_fito
+      b) Verificar contraseña: col2025
+      c) Crear usuario si no existe:
+         - Conectarse como SYSTEM
+         - CREATE USER proy_fito IDENTIFIED BY col2025;
+         - GRANT DBA TO proy_fito;
+
+   PROBLEMA 4: ORA-12514 - listener does not currently know of SID
+   └─ SOLUCIÓN:
+      a) Verificar que el SID sea ORCL (correcto para Oracle XE)
+      b) O cambiar en la clase Conexion según el SID real
+      c) En cmd: sqlplus SYSTEM/password as sysdba
+      d) select name from v$database;
+
+✓ 9. DOCUMENTACIÓN DE LA CLASE
+
+   JavaDoc agregado:
+   - Documentación de clase con @version 2.1
+   - Cuatro @author tags
+   - Documentación de cada método con @param y @return
+   - Ejemplos de uso y manejo de excepciones
+
+✓ 10. PRÓXIMOS PASOS
+
+   1. Verificar que ojdbc.jar esté en el classpath
+   2. Crear usuario 'proy_fito' en Oracle si no existe
+   3. Ejecutar SCRIPT_ORACLE_BD.sql para crear tablas
+   4. Probar conexión con código de prueba
+   5. Crear DAOs (Data Access Objects) para cada entidad
+   6. Implementar CRUD operations
+
+=====================================================================
+FIN DE VERIFICACIÓN
+=====================================================================

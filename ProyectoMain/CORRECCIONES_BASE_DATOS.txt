@@ -1,0 +1,282 @@
+-- =====================================================================
+-- CORRECCIONES REALIZADAS - CAPA DE BASE DE DATOS
+-- PROYECTO: Sistema de Inspecciones Fitosanitarias v2.1
+-- FECHA: 13 de noviembre de 2025
+-- =====================================================================
+
+PROBLEMAS IDENTIFICADOS Y SOLUCIONADOS:
+=======================================
+
+1. ✅ CONEXION.JAVA - CLASE PRINCIPAL
+
+   PROBLEMAS ENCONTRADOS:
+   └─ Credenciales incorrectas: "ejemploIca/ejemploIca"
+   └─ Falta de manejo de ClassNotFoundException
+   └─ Sin documentación JavaDoc (v2.1)
+   └─ Sin método de validación de conexión
+   └─ Sin método para cerrar conexión
+   └─ Falta de sincronización en getInstance()
+   └─ Constructor sin carga de driver JDBC
+
+   CORRECCIONES APLICADAS:
+   ✓ Cambio de credenciales a: proy_fito/col2025
+   ✓ Agregada carga de driver: Class.forName("oracle.jdbc.driver.OracleDriver")
+   ✓ Documentación JavaDoc completa con @version 2.1 y 4 autores
+   ✓ Método isConnected() para validar conexión
+   ✓ Método closeConnection() para cerrar conexión segura
+   ✓ getInstance() ahora es synchronized (thread-safe)
+   ✓ Manejo específico de ClassNotFoundException y SQLException
+   ✓ Implementación completa de interfaz DBConnection
+   ✓ Agregados comentarios en toda la clase
+
+   MÉTODOS DISPONIBLES:
+   └─ getInstance() - Obtiene instancia única (Singleton)
+   └─ getConnection() - Retorna Connection actual
+   └─ getConnectionString() - Retorna cadena JDBC
+   └─ isConnected() - Valida si está conectado
+   └─ closeConnection() - Cierra conexión segura
+
+---
+
+2. ✅ DBCONNECTION.JAVA - INTERFAZ
+
+   PROBLEMAS ENCONTRADOS:
+   └─ Sin documentación JavaDoc
+   └─ Sin comentarios en métodos
+
+   CORRECCIONES APLICADAS:
+   ✓ Documentación JavaDoc completa con @version 2.1 y 4 autores
+   ✓ Comentarios en interfaz explicando propósito
+   ✓ JavaDoc para cada método de la interfaz
+
+   MÉTODOS DEFINIDOS:
+   └─ getConnection() - Obtiene conexión
+   └─ getConnectionString() - Obtiene cadena JDBC
+
+---
+
+3. ✅ DBCONNECTIONFACTORY.JAVA - FACTORY PATTERN
+
+   PROBLEMAS ENCONTRADOS:
+   └─ Roles incorrectos: "admin", "teacher", "supervisor"
+   └─ Referencias a clases no existentes: AdminitradorConnection, DocenteConnection, SupervisorConnection
+   └─ Sin validación de entrada
+   └─ Sin documentación JavaDoc
+   └─ Sin método para obtener conexión por defecto
+   └─ Manejo de excepciones genérico
+
+   CORRECCIONES APLICADAS:
+   ✓ Roles cambiados a: admin, productor, asistente_tecnico, propietario
+   ✓ Creadas todas las clases de conexión específicas
+   ✓ Validación de entrada (rol vacío o null)
+   ✓ Documentación JavaDoc completa con @version 2.1 y 4 autores
+   ✓ Método getDefaultConnection() para obtener conexión general
+   ✓ Mensajes de error detallados
+
+   MÉTODOS DISPONIBLES:
+   └─ getConnectionByRole(String role) - Obtiene conexión por rol
+   └─ getDefaultConnection() - Obtiene conexión por defecto
+
+   ROLES SOPORTADOS:
+   ├─ admin - Administrador con acceso completo
+   ├─ productor - Usuario productor
+   ├─ asistente_tecnico - Inspector/técnico
+   └─ propietario - Propietario de predios
+
+---
+
+4. ✅ ADMINISTRATORCONNECTION.JAVA - NUEVA
+
+   CREADA EXITOSAMENTE:
+   ✓ Clase singleton para conexión de administradores
+   ✓ Implementa DBConnection
+   ✓ Documentación JavaDoc con @version 2.1 y 4 autores
+   ✓ Thread-safe con synchronized getInstance()
+   ✓ Métodos getConnection() y getConnectionString()
+
+   CARACTERÍSTICAS:
+   └─ Acceso completo a todas las operaciones
+   └─ Una única instancia por aplicación
+   └─ Delegación a Conexion principal
+
+---
+
+5. ✅ PRODUCTORCONNECTION.JAVA - NUEVA
+
+   CREADA EXITOSAMENTE:
+   ✓ Clase singleton para conexión de productores
+   ✓ Implementa DBConnection
+   ✓ Documentación JavaDoc con @version 2.1 y 4 autores
+   ✓ Thread-safe con synchronized getInstance()
+   ✓ Métodos getConnection() y getConnectionString()
+
+   CARACTERÍSTICAS:
+   └─ Acceso a lugares de producción y lotes
+   └─ Una única instancia por aplicación
+   └─ Delegación a Conexion principal
+
+---
+
+6. ✅ ASISTENTETTECNICOCONNECTION.JAVA - NUEVA
+
+   CREADA EXITOSAMENTE:
+   ✓ Clase singleton para conexión de asistentes técnicos
+   ✓ Implementa DBConnection
+   ✓ Documentación JavaDoc con @version 2.1 y 4 autores
+   ✓ Thread-safe con synchronized getInstance()
+   ✓ Métodos getConnection() y getConnectionString()
+
+   CARACTERÍSTICAS:
+   └─ Acceso para registrar inspecciones y resultados
+   └─ Una única instancia por aplicación
+   └─ Delegación a Conexion principal
+
+---
+
+7. ✅ PROPIETARIOCONNECTION.JAVA - NUEVA
+
+   CREADA EXITOSAMENTE:
+   ✓ Clase singleton para conexión de propietarios
+   ✓ Implementa DBConnection
+   ✓ Documentación JavaDoc con @version 2.1 y 4 autores
+   ✓ Thread-safe con synchronized getInstance()
+   ✓ Métodos getConnection() y getConnectionString()
+
+   CARACTERÍSTICAS:
+   └─ Acceso a información de predios
+   └─ Una única instancia por aplicación
+   └─ Delegación a Conexion principal
+
+---
+
+RESUMEN DE CAMBIOS:
+===================
+
+ARCHIVOS MODIFICADOS:
+├─ Conexion.java - Corregido completamente
+├─ DBConnection.java - Documentado
+└─ DBConnectionFactory.java - Completamente reescrito
+
+ARCHIVOS CREADOS:
+├─ AdministradorConnection.java - NUEVA
+├─ ProductorConnection.java - NUEVA
+├─ AsistenteTecnicoConnection.java - NUEVA
+└─ PropietarioConnection.java - NUEVA
+
+ARCHIVOS ELIMINADOS:
+└─ DBConectionFactory.java (duplicado con typo)
+
+---
+
+PATRONES IMPLEMENTADOS:
+=======================
+
+1. SINGLETON PATTERN:
+   ├─ Conexion (conexión principal)
+   ├─ AdministradorConnection
+   ├─ ProductorConnection
+   ├─ AsistenteTecnicoConnection
+   └─ PropietarioConnection
+
+2. FACTORY PATTERN:
+   └─ DBConnectionFactory (crea conexiones por rol)
+
+3. STRATEGY PATTERN:
+   └─ DBConnection (interfaz base para diferentes estrategias)
+
+---
+
+FLUJO DE CONEXIÓN:
+==================
+
+┌─ Cliente
+│
+└─ DBConnectionFactory.getConnectionByRole(rol)
+   │
+   ├─ Si rol="admin" → AdministradorConnection.getInstance()
+   ├─ Si rol="productor" → ProductorConnection.getInstance()
+   ├─ Si rol="asistente_tecnico" → AsistenteTecnicoConnection.getInstance()
+   ├─ Si rol="propietario" → PropietarioConnection.getInstance()
+   │
+   └─ Cada ConnectionRole
+      │
+      └─ Conexion.getInstance() ← Singleton principal
+         │
+         └─ DriverManager.getConnection()
+            │
+            └─ Oracle Database
+
+---
+
+EJEMPLO DE USO:
+===============
+
+// Obtener conexión por rol
+DBConnection conn = DBConnectionFactory.getConnectionByRole("admin");
+Connection connection = conn.getConnection();
+
+// O conexión por defecto
+DBConnection defaultConn = DBConnectionFactory.getDefaultConnection();
+Connection connection = defaultConn.getConnection();
+
+// Validar conexión
+Conexion conexion = Conexion.getInstance();
+if (conexion.isConnected()) {
+    System.out.println("Conectado a Oracle");
+} else {
+    System.out.println("No hay conexión");
+}
+
+// Cerrar conexión
+conexion.closeConnection();
+
+---
+
+PRÓXIMOS PASOS:
+===============
+
+1. ✓ Capa de base de datos implementada correctamente
+2. ⏳ Crear DAOs (Data Access Objects) para cada entidad
+3. ⏳ Implementar operaciones CRUD
+4. ⏳ Crear servicios de negocio
+5. ⏳ Implementar interfaz gráfica
+
+---
+
+VALIDACIONES IMPLEMENTADAS:
+============================
+
+✓ Thread-safe: synchronized getInstance()
+✓ Manejo de excepciones específicas
+✓ Validación de rol en factory
+✓ Validación de conexión antes de usar
+✓ Cierre seguro de conexión
+✓ Carga de driver JDBC
+
+---
+
+CREDENCIALES CONFIGURADAS:
+==========================
+
+Usuario: proy_fito
+Contraseña: col2025
+Host: 192.168.254.215
+Puerto: 1521
+SID: ORCL
+
+Cadena JDBC: jdbc:oracle:thin:@192.168.254.215:1521:ORCL
+
+---
+
+DOCUMENTACIÓN:
+===============
+
+✓ Todas las clases tienen JavaDoc v2.1
+✓ Todos los métodos están documentados
+✓ Todos los parámetros tienen @param
+✓ Todos los retornos tienen @return
+✓ Cuatro autores especificados en cada clase
+
+=====================================================================
+FIN DE CORRECCIONES
+=====================================================================

@@ -1,0 +1,488 @@
+================================================================================
+         GUÍA DE USO Y CONFIGURACIÓN - SISTEMA DE INSPECCIONES FITOSANITARIAS
+================================================================================
+
+VERSIÓN: 2.1
+FECHA: 13 de noviembre de 2025
+
+================================================================================
+                        1. REQUISITOS DEL SISTEMA
+================================================================================
+
+HARDWARE:
+├─ Procesador: Intel Core i5 o superior
+├─ RAM: 4 GB mínimo (8 GB recomendado)
+├─ Disco: 2 GB espacio disponible
+└─ Conexión: Red TCP/IP 1 Mbps mínimo
+
+SOFTWARE:
+├─ Java Development Kit (JDK): 8 o superior
+├─ Oracle Database: 11g, 12c, 19c o superior
+├─ IDE: Eclipse, IntelliJ IDEA, NetBeans
+├─ Navegador: Cualquiera (si se implementa web)
+└─ Git: Para control de versiones (opcional)
+
+BASE DE DATOS:
+├─ Motor: Oracle Database
+├─ Usuario: proy_fito
+├─ Contraseña: col2025
+├─ Host: 192.168.254.215
+├─ Puerto: 1521
+├─ SID: ORCL
+└─ JDBC URL: jdbc:oracle:thin:@192.168.254.215:1521:ORCL
+
+================================================================================
+                        2. INSTALACIÓN PASO A PASO
+================================================================================
+
+PASO 1: Descargar y configurar JDK
+──────────────────────────────────
+a) Descargar JDK 8 o superior desde: java.oracle.com
+b) Instalar en directorio como: C:\Program Files\Java\jdk1.8.0_301
+c) Configurar variable de entorno JAVA_HOME
+d) Agregar %JAVA_HOME%\bin al PATH
+e) Verificar: abrir CMD y ejecutar "java -version"
+
+PASO 2: Configurar Oracle Database
+───────────────────────────────────
+a) Acceder a servidor Oracle: 192.168.254.215:1521
+b) Crear usuario "proy_fito" con contraseña "col2025"
+c) Ejecutar script: SCRIPT_ORACLE_BD.sql
+d) Verificar tablas creadas: 15 tablas
+e) Crear índices: Ejecutados en el script
+
+PASO 3: Configurar IDE (Eclipse)
+─────────────────────────────────
+a) Descargar Eclipse IDE for Java Developers
+b) Crear nuevo proyecto: File → New → Java Project
+c) Nombre: ProyectoMain
+d) JRE: JavaSE-1.8 (o superior)
+e) Agregar Oracle JDBC Driver:
+   - Descargar ojdbc8.jar de: oracle.com
+   - Copiar a carpeta: lib/
+   - Agregar al Build Path
+
+PASO 4: Importar código fuente
+──────────────────────────────
+a) Copiar carpetas src/, bin/ al proyecto
+b) Estructura esperada:
+   ProyectoMain/
+   ├── src/
+   │   ├── model/
+   │   ├── BaseDatos/
+   │   └── DAO/
+   ├── bin/
+   └── lib/
+       └── ojdbc8.jar
+
+PASO 5: Compilar el proyecto
+────────────────────────────
+a) Clic derecho en proyecto → Build Project
+b) Verificar: No hay errores (warnings permitidos)
+c) Revisar carpeta bin/ - archivos .class generados
+
+================================================================================
+                        3. CONEXIÓN A LA BASE DE DATOS
+================================================================================
+
+CONFIGURACIÓN ACTUAL (NO MODIFICAR):
+────────────────────────────────────
+Archivo: src/BaseDatos/Conexion.java
+
+private static final String username = "proy_fito";
+private static final String password = "col2025";
+private static final String host = "192.168.254.215";
+private static final String port = "1521";
+private static final String service = "ORCL";
+
+CADENA DE CONEXIÓN GENERADA:
+────────────────────────────
+jdbc:oracle:thin:@192.168.254.215:1521:ORCL
+
+PROBAR CONEXIÓN:
+────────────────
+// Código de prueba
+import BaseDatos.Conexion;
+import java.sql.Connection;
+
+public class TestConexion {
+    public static void main(String[] args) {
+        try {
+            Conexion conexion = Conexion.getInstance();
+            Connection conn = conexion.getConnection();
+            
+            if (conn != null && !conn.isClosed()) {
+                System.out.println("✅ Conexión exitosa a Oracle");
+            } else {
+                System.out.println("❌ Conexión fallida");
+            }
+            
+            conexion.closeConnection();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+================================================================================
+                        4. USO DEL SISTEMA DAO
+================================================================================
+
+EJEMPLO 1: Crear un nuevo cultivo
+──────────────────────────────────
+
+import DAO.CultivoDAO;
+import model.Cultivo;
+
+public class CrearCultivo {
+    public static void main(String[] args) {
+        try {
+            CultivoDAO dao = new CultivoDAO();
+            Cultivo cultivo = new Cultivo();
+            cultivo.setId("CULT_MAIZ_001");
+            
+            long id = dao.crear(cultivo);
+            System.out.println("Cultivo creado con ID: " + id);
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+EJEMPLO 2: Buscar cultivo por ID
+─────────────────────────────────
+
+import DAO.CultivoDAO;
+import model.Cultivo;
+
+public class BuscarCultivo {
+    public static void main(String[] args) {
+        try {
+            CultivoDAO dao = new CultivoDAO();
+            Cultivo cultivo = dao.obtenerPorId(1);
+            
+            if (cultivo != null) {
+                System.out.println("Cultivo encontrado: " + cultivo.getId());
+            } else {
+                System.out.println("No encontrado");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+EJEMPLO 3: Listar todos los cultivos
+──────────────────────────────────────
+
+import DAO.CultivoDAO;
+import model.Cultivo;
+import java.util.List;
+
+public class ListarCultivos {
+    public static void main(String[] args) {
+        try {
+            CultivoDAO dao = new CultivoDAO();
+            List<Cultivo> cultivos = dao.obtenerTodos();
+            
+            System.out.println("Total de cultivos: " + cultivos.size());
+            for (Cultivo c : cultivos) {
+                System.out.println("- " + c.getId());
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+EJEMPLO 4: Actualizar cultivo
+──────────────────────────────
+
+import DAO.CultivoDAO;
+import model.Cultivo;
+
+public class ActualizarCultivo {
+    public static void main(String[] args) {
+        try {
+            CultivoDAO dao = new CultivoDAO();
+            Cultivo cultivo = new Cultivo();
+            cultivo.setId("CULT_MAIZ_001");
+            
+            int filasActualizadas = dao.actualizar(cultivo);
+            System.out.println("Filas actualizadas: " + filasActualizadas);
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+EJEMPLO 5: Cambiar estado de inspección
+────────────────────────────────────────
+
+import DAO.InspeccionFitosanitariaDAO;
+
+public class CambiarEstado {
+    public static void main(String[] args) {
+        try {
+            InspeccionFitosanitariaDAO dao = new InspeccionFitosanitariaDAO();
+            int resultado = dao.cambiarEstado(1, "COMPLETADA");
+            System.out.println("Estado actualizado: " + resultado);
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+================================================================================
+                        5. ESTRUCTURA DE USUARIOS Y ROLES
+================================================================================
+
+ROLES DISPONIBLES:
+──────────────────
+
+1. ADMINISTRADOR
+   ├─ Acceso: Completo al sistema
+   ├─ Funciones:
+   │  ├─ Crear/modificar usuarios
+   │  ├─ Generar reportes
+   │  ├─ Configurar sistema
+   │  └─ Ver auditoría
+   └─ Conexión: AdministradorConnection
+
+2. PRODUCTOR
+   ├─ Acceso: Gestión de cultivos y predios
+   ├─ Funciones:
+   │  ├─ Registrar lotes
+   │  ├─ Gestionar cultivos
+   │  ├─ Ver inspecciones
+   │  └─ Reportes propios
+   └─ Conexión: ProductorConnection
+
+3. ASISTENTE TÉCNICO
+   ├─ Acceso: Inspecciones y reportes técnicos
+   ├─ Funciones:
+   │  ├─ Realizar inspecciones
+   │  ├─ Registrar plagas
+   │  ├─ Generar resultados
+   │  └─ Recomendaciones
+   └─ Conexión: AsistenteTecnicoConnection
+
+4. PROPIETARIO
+   ├─ Acceso: Consulta de predios e inspecciones
+   ├─ Funciones:
+   │  ├─ Ver predios propios
+   │  ├─ Consultar inspecciones
+   │  ├─ Generar reportes
+   │  └─ Descargar certificados
+   └─ Conexión: PropietarioConnection
+
+USO DE CONEXIONES POR ROL:
+──────────────────────────
+
+import BaseDatos.DBConnectionFactory;
+import BaseDatos.DBConnection;
+
+// Para administrador
+DBConnection adminConn = DBConnectionFactory.getConnectionByRole("admin");
+
+// Para productor
+DBConnection prodConn = DBConnectionFactory.getConnectionByRole("productor");
+
+// Para técnico
+DBConnection techConn = DBConnectionFactory.getConnectionByRole("asistente_tecnico");
+
+// Para propietario
+DBConnection propConn = DBConnectionFactory.getConnectionByRole("propietario");
+
+================================================================================
+                        6. ESTRUCTURA DE DATOS
+================================================================================
+
+ENTIDADES PRINCIPALES:
+──────────────────────
+
+1. USUARIO (Base)
+   ├─ ID_USUARIO (PK)
+   ├─ NOMBRE
+   ├─ NUMERO_IDENTIFICACION (Unique)
+   ├─ ROL
+   ├─ TELEFONO_CONTACTO
+   ├─ CORREO_ELECTRONICO (Unique)
+   └─ ACTIVO
+
+2. DEPARTAMENTO (Entidad Geográfica)
+   ├─ ID_DEPARTAMENTO (PK)
+   ├─ NOMBRE
+   └─ CODIGO
+
+3. MUNICIPIO (Entidad Geográfica)
+   ├─ ID_MUNICIPIO (PK)
+   ├─ ID_DEPARTAMENTO (FK)
+   ├─ NOMBRE
+   └─ CODIGO
+
+4. VEREDA (Entidad Geográfica)
+   ├─ ID_VEREDA (PK)
+   ├─ ID_MUNICIPIO (FK)
+   ├─ NOMBRE
+   └─ CODIGO
+
+5. PREDIO (Propiedad agrícola)
+   ├─ ID_PREDIO (PK)
+   ├─ ID_PROPIETARIO (FK)
+   ├─ ID_VEREDA (FK)
+   ├─ NOMBRE
+   ├─ AREA_HECTAREAS
+   └─ MATRICULA
+
+6. LUGAR_PRODUCCION (Zona de cultivo)
+   ├─ ID_LUGAR_PRODUCCION (PK)
+   ├─ ID_PREDIO (FK)
+   ├─ NOMBRE
+   └─ TIPO_CULTIVO
+
+7. LOTE (Parcela)
+   ├─ ID_LOTE (PK)
+   ├─ ID_LUGAR_PRODUCCION (FK)
+   ├─ NUMERO_LOTE
+   └─ AREA_HECTAREAS
+
+8. CULTIVO (Plantación)
+   ├─ ID_CULTIVO (PK)
+   ├─ ID_LOTE (FK)
+   ├─ TIPO_CULTIVO
+   ├─ FECHA_SIEMBRA
+   └─ ESTADO
+
+9. PLAGA (Pest)
+   ├─ ID_PLAGA (PK)
+   ├─ NOMBRE_COMUN
+   ├─ NOMBRE_CIENTIFICO
+   ├─ DESCRIPCION
+   └─ NIVEL_PELIGROSIDAD
+
+10. INSPECCION_FITOSANITARIA (Evaluación)
+    ├─ ID_INSPECCION (PK)
+    ├─ ID_CULTIVO (FK)
+    ├─ ID_ASISTENTE_TECNICO (FK)
+    ├─ FECHA_INSPECCION
+    └─ ESTADO
+
+11. RESULTADO_TECNICO (Hallazgos)
+    ├─ ID_RESULTADO (PK)
+    ├─ ID_INSPECCION (FK)
+    ├─ ID_PLAGA (FK)
+    ├─ NIVEL_INFESTACION
+    └─ RECOMENDACIONES
+
+================================================================================
+                        7. CONSULTAS ÚTILES SQL
+================================================================================
+
+Ver todos los cultivos activos:
+────────────────────────────────
+SELECT * FROM CULTIVO WHERE ESTADO = 'ACTIVO';
+
+Inspecciones pendientes:
+────────────────────────
+SELECT * FROM INSPECCION_FITOSANITARIA WHERE ESTADO = 'PENDIENTE';
+
+Cultivos en predios de una vereda:
+──────────────────────────────────
+SELECT C.* FROM CULTIVO C
+JOIN LOTE L ON C.ID_LOTE = L.ID_LOTE
+JOIN LUGAR_PRODUCCION LP ON L.ID_LUGAR_PRODUCCION = LP.ID_LUGAR_PRODUCCION
+JOIN PREDIO P ON LP.ID_PREDIO = P.ID_PREDIO
+WHERE P.ID_VEREDA = ?;
+
+Plagas detectadas en cultivos:
+──────────────────────────────
+SELECT DISTINCT P.* FROM PLAGA P
+JOIN RESULTADO_TECNICO RT ON P.ID_PLAGA = RT.ID_PLAGA
+WHERE RT.NIVEL_INFESTACION != 'BAJO';
+
+Usuarios activos por rol:
+─────────────────────────
+SELECT * FROM USUARIO WHERE ACTIVO = 1 AND ROL = 'productor';
+
+================================================================================
+                        8. TROUBLESHOOTING
+================================================================================
+
+PROBLEMA: "Cannot find symbol: class Conexion"
+──────────────────────────────────────────────
+Solución:
+1. Verificar que src/BaseDatos/Conexion.java existe
+2. Limpiar proyecto: Project → Clean
+3. Reconstruir: Project → Build Project
+4. Verificar import: import BaseDatos.Conexion;
+
+PROBLEMA: SQLException - "IO Error: Connection refused"
+────────────────────────────────────────────────────────
+Solución:
+1. Verificar que Oracle está en ejecución
+2. Verificar IP: 192.168.254.215 es accesible
+3. Verificar puerto: 1521 está abierto
+4. Probar conectividad: ping 192.168.254.215
+
+PROBLEMA: "cannot find symbol: method getNombre()"
+──────────────────────────────────────────────────
+Solución:
+1. Verificar nombre exacto del método en clase model
+2. Ver archivo model/Usuario.java para métodos disponibles
+3. Usar nombres correctos: getNombre(), getTelefonoContacto()
+
+PROBLEMA: "ojdbc8.jar not found"
+─────────────────────────────────
+Solución:
+1. Descargar de: oracle.com/database/technologies/appdev/jdbc
+2. Copiar a carpeta: lib/ del proyecto
+3. Clic derecho → Build Path → Add to Build Path
+4. Limpiar y reconstruir proyecto
+
+================================================================================
+                        9. DOCUMENTACIÓN ADICIONAL
+================================================================================
+
+Archivos de referencia:
+├─ VERIFICACION_FINAL.txt - Estado de verificación
+├─ RESUMEN_DAO.txt - Detalles de la capa DAO
+├─ RESUMEN_FINAL_PROYECTO.txt - Resumen completo
+├─ SCRIPT_ORACLE_BD.sql - DDL de base de datos
+└─ Código fuente JavaDoc - Documentación integrada
+
+Comandos útiles:
+├─ Compilar: javac -d bin src/**/*.java
+├─ Ejecutar: java -cp bin:lib/ojdbc8.jar TestConexion
+├─ Limpiar: rm -rf bin/* (Linux/Mac) o del bin\*.class (Windows)
+└─ Buscar errores: grep -r "error" src/
+
+================================================================================
+                        10. SOPORTE Y CONTACTO
+================================================================================
+
+AUTORES:
+├─ Isabella Vargas
+├─ Ricardo Viancha
+├─ Iswar Corrales
+└─ Andres Rivero
+
+VERSIÓN: 2.1
+FECHA: 13 de noviembre de 2025
+
+REPORTAR PROBLEMAS:
+├─ Revisar esta guía primero
+├─ Consultar documentación en código
+├─ Verificar archivos de log
+└─ Contactar a autores
+
+MEJORAS FUTURAS:
+├─ Implementar servicios
+├─ Crear interfaz gráfica
+├─ Agregar validaciones
+├─ Implementar logging
+└─ Crear pruebas unitarias
+
+================================================================================
+✅ GUÍA COMPLETADA - SISTEMA OPERATIVO Y LISTO PARA USAR
+================================================================================

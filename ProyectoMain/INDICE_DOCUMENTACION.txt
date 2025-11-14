@@ -1,0 +1,427 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              📚 ÍNDICE DE DOCUMENTACIÓN - PROYECTO v2.1                       ║
+║                                                                               ║
+║         Sistema de Inspecciones Fitosanitarias para Agricultura               ║
+║                                                                               ║
+║                        13 de noviembre de 2025                                ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+📑 TABLA DE CONTENIDOS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DOCUMENTOS DE PROYECTO
+2. ESTRUCTURA DEL CÓDIGO
+3. GUÍAS DE USO
+4. REFERENCIAS TÉCNICAS
+5. ARCHIVOS DE BASE DE DATOS
+6. PRÓXIMOS PASOS
+
+
+═══════════════════════════════════════════════════════════════════════════════
+1. DOCUMENTOS DE PROYECTO
+═══════════════════════════════════════════════════════════════════════════════
+
+📄 ESTADO_PROYECTO_VISUAL.txt (Este archivo)
+   ├─ Ubicación: Raíz del proyecto
+   ├─ Contenido: Estado visual de todo el proyecto
+   ├─ Audiencia: Gerentes, evaluadores
+   ├─ Valor: Visión general en 5 minutos
+   └─ Actualización: 13/11/2025
+
+📄 RESUMEN_FINAL_PROYECTO.txt
+   ├─ Ubicación: Raíz del proyecto
+   ├─ Contenido: Resumen ejecutivo completo
+   ├─ Secciones:
+   │  ├─ Fases completadas (4 fases)
+   │  ├─ Estructura del proyecto
+   │  ├─ Estadísticas detalladas
+   │  ├─ Patrones de diseño
+   │  ├─ Características de seguridad
+   │  └─ Próximos pasos recomendados
+   ├─ Audiencia: Desarrolladores, arquitectos
+   ├─ Valor: Comprensión total del proyecto
+   └─ Actualización: 13/11/2025
+
+📄 GUIA_USO_SISTEMA.txt
+   ├─ Ubicación: Raíz del proyecto
+   ├─ Contenido: Manual de instalación y uso
+   ├─ Secciones:
+   │  ├─ Requisitos del sistema
+   │  ├─ Instalación paso a paso
+   │  ├─ Configuración de conexión
+   │  ├─ Ejemplos de código CRUD
+   │  ├─ Estructura de usuarios y roles
+   │  ├─ Estructura de datos
+   │  ├─ Consultas SQL útiles
+   │  ├─ Troubleshooting
+   │  └─ Soporte y contacto
+   ├─ Audiencia: Desarrolladores, administradores
+   ├─ Valor: Implementación y configuración del sistema
+   └─ Actualización: 13/11/2025
+
+📄 VERIFICACION_FINAL.txt
+   ├─ Ubicación: Raíz del proyecto
+   ├─ Contenido: Reporte de verificación de capas
+   ├─ Incluye:
+   │  ├─ Estado de cada clase en BaseDatos/
+   │  ├─ Patrones implementados
+   │  ├─ Características de seguridad
+   │  ├─ Documentación Java
+   │  ├─ Ejemplos de uso
+   │  └─ Errores encontrados y corregidos
+   ├─ Audiencia: QA, revisores técnicos
+   ├─ Valor: Validación de implementación
+   └─ Actualización: 13/11/2025
+
+📄 RESUMEN_DAO.txt
+   ├─ Ubicación: Raíz del proyecto
+   ├─ Contenido: Documentación completa de DAOs
+   ├─ Incluye:
+   │  ├─ Estructura de 16 DAOs
+   │  ├─ Descripción detallada de cada DAO
+   │  ├─ Métodos genéricos en DAOBase
+   │  ├─ Patrones de diseño
+   │  ├─ Características de implementación
+   │  ├─ Ejemplo de uso
+   │  ├─ Flujo de datos
+   │  └─ Estadísticas
+   ├─ Audiencia: Desarrolladores backend
+   ├─ Valor: Entendimiento de capa DAO
+   └─ Actualización: 13/11/2025
+
+
+═══════════════════════════════════════════════════════════════════════════════
+2. ESTRUCTURA DEL CÓDIGO
+═══════════════════════════════════════════════════════════════════════════════
+
+CARPETA: src/model/ (14 clases)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Entidades del negocio                                                      │
+│                                                                            │
+│ Usuario.java (abstracta)          - Base de todos los usuarios             │
+│ Productor.java                    - Responsable agrícola                   │
+│ AsistenteTecnico.java             - Inspector técnico                      │
+│ Propietario.java                  - Dueño de predio                        │
+│                                                                            │
+│ Departamento.java                 - División geográfica mayor              │
+│ Municipio.java                    - División geográfica media              │
+│ Vereda.java                       - División geográfica menor              │
+│ Predio.java                       - Propiedad agrícola                     │
+│ LugarProduccion.java              - Zona de cultivo                        │
+│ Lote.java                         - Parcela de cultivo                     │
+│ Cultivo.java                      - Plantación específica                  │
+│ Plaga.java                        - Pest agrícola                          │
+│ InspeccionFitosanitaria.java      - Evaluación técnica                     │
+│ ResultadoTecnico.java             - Hallazgos de inspección                │
+│                                                                            │
+│ Documentación: v2.1 con 4 autores                                          │
+│ Estado: ✅ 100% Completadas                                               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+CARPETA: src/BaseDatos/ (7 clases)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Capa de conexión a Oracle                                                  │
+│                                                                            │
+│ Conexion.java                     - Singleton, conexión principal          │
+│ DBConnection.java                 - Interfaz de conexión                   │
+│ DBConnectionFactory.java          - Factory pattern, crea por rol          │
+│ AdministradorConnection.java      - Singleton para admin                   │
+│ ProductorConnection.java          - Singleton para productor               │
+│ AsistenteTecnicoConnection.java   - Singleton para técnico                 │
+│ PropietarioConnection.java        - Singleton para propietario             │
+│                                                                            │
+│ Documentación: v2.1 con 4 autores                                          │
+│ Estado: ✅ 100% Completadas                                               │
+│ Thread-safe: ✅ SÍ (synchronized getInstance)                             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+CARPETA: src/DAO/ (16 clases)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Capa de acceso a datos (Data Access Objects)                              │
+│                                                                            │
+│ DAOBase.java                      - Clase genérica base <T>                │
+│                                                                            │
+│ USUARIOS:                                                                  │
+│ UsuarioDAO.java                   - DAO para Usuario (base)                │
+│ ProductorDAO.java                 - CRUD para Productor                    │
+│ AsistenteTecnicoDAO.java          - CRUD para AsistenteTecnico             │
+│ PropietarioDAO.java               - CRUD para Propietario                  │
+│                                                                            │
+│ ENTIDADES GEOGRÁFICAS:                                                    │
+│ DepartamentoDAO.java              - CRUD para Departamento                 │
+│ MunicipioDAO.java                 - CRUD para Municipio                    │
+│ VeredaDAO.java                    - CRUD para Vereda                       │
+│ PredioDAO.java                    - CRUD para Predio                       │
+│                                                                            │
+│ ENTIDADES AGRÍCOLAS:                                                      │
+│ LugarProduccionDAO.java           - CRUD para LugarProduccion              │
+│ LoteDAO.java                      - CRUD para Lote                         │
+│ CultivoDAO.java                   - CRUD para Cultivo                      │
+│ PlagaDAO.java                     - CRUD para Plaga                        │
+│                                                                            │
+│ INSPECCIONES:                                                              │
+│ InspeccionFitosanitariaDAO.java   - CRUD para Inspección                   │
+│ ResultadoTecnicoDAO.java          - CRUD para Resultado                    │
+│                                                                            │
+│ Documentación: v2.1 con 4 autores                                          │
+│ Estado: ✅ 100% Completadas                                               │
+│ Total: 16 clases + 1 base = 17 archivos                                   │
+└────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+3. GUÍAS DE USO
+═══════════════════════════════════════════════════════════════════════════════
+
+LECTURA RECOMENDADA SEGÚN PERFIL:
+
+👔 GERENTES / EVALUADORES
+├─ Leer: ESTADO_PROYECTO_VISUAL.txt (5 min)
+├─ Luego: RESUMEN_FINAL_PROYECTO.txt (15 min)
+├─ Útil para: Entender estado y capacidades del sistema
+└─ Resultado: Visión completa del proyecto
+
+👨‍💻 DESARROLLADORES
+├─ Leer: GUIA_USO_SISTEMA.txt (30 min)
+├─ Luego: RESUMEN_DAO.txt (20 min)
+├─ Revisar: Código fuente con JavaDoc
+├─ Útil para: Implementar servicios y GUI
+└─ Resultado: Capacidad de extender el sistema
+
+🔧 ADMINISTRADORES / DEVOPS
+├─ Leer: GUIA_USO_SISTEMA.txt (30 min)
+├─ Secciones importantes:
+│  ├─ 1. Requisitos del sistema
+│  ├─ 2. Instalación paso a paso
+│  ├─ 3. Conexión a base de datos
+│  └─ 8. Troubleshooting
+├─ Útil para: Configurar ambiente de producción
+└─ Resultado: Sistema operativo
+
+🧪 QA / TESTING
+├─ Leer: VERIFICACION_FINAL.txt (20 min)
+├─ Luego: GUIA_USO_SISTEMA.txt (20 min)
+├─ Revisar: Ejemplos de código en Sección 4
+├─ Útil para: Crear casos de prueba
+└─ Resultado: Plan de testing completo
+
+📊 ARQUITECTOS
+├─ Leer: RESUMEN_FINAL_PROYECTO.txt (20 min)
+├─ Revisar: Diagrama de capas en ESTADO_PROYECTO_VISUAL.txt
+├─ Analizar: Patrones de diseño en VERIFICACION_FINAL.txt
+├─ Útil para: Entender decisiones de arquitectura
+└─ Resultado: Documentación para futuros proyectos
+
+
+═══════════════════════════════════════════════════════════════════════════════
+4. REFERENCIAS TÉCNICAS
+═══════════════════════════════════════════════════════════════════════════════
+
+TECNOLOGÍAS UTILIZADAS:
+├─ Lenguaje: Java 8+
+├─ IDE: Eclipse
+├─ Base de datos: Oracle 11g/12c/19c
+├─ JDBC: ojdbc8.jar
+├─ Patrones: Singleton, Factory, DAO, Template Method
+└─ Librerías: java.sql (JDBC estándar)
+
+PATRONES DE DISEÑO IMPLEMENTADOS:
+├─ Singleton Pattern
+│  └─ Conexion.java, AdministradorConnection, ProductorConnection, etc.
+├─ Factory Pattern
+│  └─ DBConnectionFactory.java
+├─ Strategy Pattern
+│  └─ DBConnection interface
+├─ Template Method Pattern
+│  └─ DAOBase.java
+├─ DAO Pattern
+│  └─ 15 DAOs especializados
+├─ Generic Programming
+│  └─ DAOBase<T>, ResultSetMapper<T>
+└─ Inheritance
+   └─ Usuario abstracta como base
+
+CONFIGURACIÓN DE BASE DE DATOS:
+├─ Host: 192.168.254.215
+├─ Puerto: 1521
+├─ SID: ORCL
+├─ Usuario: proy_fito
+├─ Contraseña: col2025
+├─ JDBC URL: jdbc:oracle:thin:@192.168.254.215:1521:ORCL
+├─ Tablas: 15
+├─ Índices: 20+
+└─ Secuencias: 13
+
+
+═══════════════════════════════════════════════════════════════════════════════
+5. ARCHIVOS DE BASE DE DATOS
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 SCRIPT_ORACLE_BD.sql
+├─ Ubicación: Raíz del proyecto
+├─ Contenido:
+│  ├─ CREATE DATABASE
+│  ├─ 15 CREATE TABLE statements
+│  ├─ 20+ CREATE INDEX statements
+│  ├─ 13 CREATE SEQUENCE statements
+│  ├─ 15 ALTER TABLE (Foreign Keys)
+│  └─ 50+ Constraints
+├─ Tablas creadas:
+│  ├─ DEPARTAMENTO
+│  ├─ MUNICIPIO
+│  ├─ VEREDA
+│  ├─ PREDIO
+│  ├─ USUARIO
+│  ├─ PRODUCTOR
+│  ├─ ASISTENTE_TECNICO
+│  ├─ PROPIETARIO
+│  ├─ LUGAR_PRODUCCION
+│  ├─ LOTE
+│  ├─ CULTIVO
+│  ├─ PLAGA
+│  ├─ PLAGA_CULTIVO (M:M)
+│  ├─ INSPECCION_FITOSANITARIA
+│  └─ RESULTADO_TECNICO
+├─ Cómo ejecutar:
+│  └─ SQL> @SCRIPT_ORACLE_BD.sql
+├─ Audiencia: DBAs, administradores
+└─ Actualización: 13/11/2025
+
+DICCIONARIO DE DATOS:
+├─ 15 tablas descriptas
+├─ 50+ campos especificados
+├─ 15 relaciones documentadas
+├─ Tipos de datos: VARCHAR2, NUMBER, DATE
+└─ Constraints: PK, FK, NOT NULL, UNIQUE
+
+
+═══════════════════════════════════════════════════════════════════════════════
+6. PRÓXIMOS PASOS
+═══════════════════════════════════════════════════════════════════════════════
+
+FASE 5: SERVICIOS (Recomendado)
+├─ Crear ServicesBase genérica
+├─ Implementar:
+│  ├─ CultivoService
+│  ├─ InspeccionService
+│  ├─ ProductorService
+│  ├─ PropietarioService
+│  └─ AsistenteService
+├─ Agregar: Validaciones, reglas de negocio, transacciones
+├─ Beneficio: Encapsular lógica, facilitar GUI
+└─ Duración estimada: 1-2 semanas
+
+FASE 6: INTERFAZ GRÁFICA (Seguido)
+├─ Tecnología: Swing o JavaFX
+├─ Componentes:
+│  ├─ LoginFrame (autenticación por rol)
+│  ├─ CultivoFrame (gestión)
+│  ├─ InspeccionFrame (registro)
+│  ├─ ReportesFrame (generación)
+│  └─ AdminFrame (administración)
+├─ Validación: Input validation, manejo de errores
+├─ Beneficio: Interfaz amigable para usuarios
+└─ Duración estimada: 3-4 semanas
+
+FASE 7: VALIDACIONES Y REGLAS (Paralelo)
+├─ Validar datos de entrada
+├─ Implementar reglas:
+│  ├─ Área mínima de lote
+│  ├─ Rango de nivel de infestación
+│  ├─ Restricciones de rol
+│  └─ Lógica de inspección
+├─ Agregar alertas automáticas
+├─ Beneficio: Mayor robustez del sistema
+└─ Duración estimada: 1-2 semanas
+
+FASE 8: PRUEBAS Y LOGGING (Final)
+├─ JUnit: Pruebas unitarias para DAOs y Servicios
+├─ Log4j: Sistema de logging completo
+├─ Auditoría: Registro de cambios
+├─ Reportes: Errores, actividades, métricas
+├─ Testing: QA, testing de integración
+├─ Beneficio: Calidad y confiabilidad
+└─ Duración estimada: 2-3 semanas
+
+CRONOGRAMA SUGERIDO:
+├─ Fase 5 (Servicios): 2 semanas
+├─ Fase 6 (GUI): 4 semanas (paralelo con 7)
+├─ Fase 7 (Validaciones): 2 semanas (paralelo)
+└─ Fase 8 (Pruebas): 3 semanas
+└─ TOTAL: 8-10 semanas hasta producción
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📚 BÚSQUEDA RÁPIDA
+═══════════════════════════════════════════════════════════════════════════════
+
+¿Cómo instalar el sistema?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 2
+
+¿Cómo conectar a la base de datos?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 3
+
+¿Cómo usar los DAOs?
+└─ Ver: RESUMEN_DAO.txt → Sección 5
+
+¿Cómo crear un cultivo?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 4 (Ejemplo 1)
+
+¿Qué patrones se utilizaron?
+└─ Ver: RESUMEN_FINAL_PROYECTO.txt → Patrones de Diseño
+
+¿Cuál es la estructura de la BD?
+└─ Ver: ESTADO_PROYECTO_VISUAL.txt → Estructura de BD
+
+¿Qué hacer si hay error de conexión?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 8 (Troubleshooting)
+
+¿Qué usuarios pueden acceder?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 5 (Usuarios y Roles)
+
+¿Cómo ejecutar SQL?
+└─ Ver: GUIA_USO_SISTEMA.txt → Sección 7 (Consultas SQL)
+
+¿Cuál es la siguiente fase?
+└─ Ver: RESUMEN_FINAL_PROYECTO.txt → Próximos Pasos
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 SOPORTE Y CONTACTO
+═══════════════════════════════════════════════════════════════════════════════
+
+AUTORES DEL PROYECTO:
+├─ Isabella Vargas
+├─ Ricardo Viancha
+├─ Iswar Corrales
+└─ Andres Rivero
+
+VERSIÓN: 2.1
+FECHA: 13 de noviembre de 2025
+
+REPORTAR PROBLEMAS:
+├─ Revisar GUIA_USO_SISTEMA.txt sección 8
+├─ Buscar en la documentación
+├─ Revisar logs y errores
+└─ Contactar a autores si persiste
+
+MEJORAS SUGERIDAS:
+├─ Enviar a: [autores]
+├─ Asunto: "Mejora - Sistema Fitosanitario"
+└─ Incluir: Descripción, pasos para reproducir
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                    ✅ DOCUMENTACIÓN ÍNDICE COMPLETADA                        ║
+║                                                                               ║
+║         Encuentra fácilmente lo que necesitas en los documentos listados.     ║
+║                                                                               ║
+║                  Comienza por el perfil que corresponda →                     ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
